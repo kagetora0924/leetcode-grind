@@ -1,4 +1,5 @@
 class Solution:
+    # 正解までの時間9:30
     def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
         # 元々ソートされているので、かぶっている要素は連続して登場するのがわかる.
         # まずcurrが指したノードを保存しておき、次のノードnextが同じ値だったら、nextはリストから除外する.
@@ -12,5 +13,8 @@ class Solution:
             while next_node and curr_node.val == next_node.val:
                 next_node = next_node.next
                 curr_node.next = next_node
+            
+            # curr_nodeを進めないといけないのを見落とした.
+            curr_node = curr_node.next
             
         return head
