@@ -13,21 +13,25 @@ class Solution:
         循環の開始位置を決めるには、少し計算をしたらわかる他の作業があった記憶があるが、循環があるかどうか
         見つけるだけであればそれを気にしなくていいな、と考える
         """
-        if not head:
-            return False
+        # if not head:
+        #     return False
         # slow, fastを定義する時点でheadがNoneでないと確かめないといけないことに気づく
+
+        # headがNoneの場合を特別扱いしないためにfastの初期値をheadに変更。そもそもこちらが自然だったと感じる
         slow = head
-        fast = head.next
+        fast = head
 
         # slowを進めるにはslowがNoneではいけない、fastを進めるにはfastがNoneではもちろんいけないが、fast.nextもNoneではいけない
         # この判定文では判定する要素を減らせそうだが、わかりやすさのために3つとも含めておくのが良いと思った
-        while slow and fast and fast.next:
+        # headがNoneの場合、fastがまずFalse判定されるのでfast.nextを判定しようとしてエラーにならないのかな？と思った
+        while fast and fast.next:
+            assert(slow)
             # 無限ループに陥らないか不安になる。循環がなければfastかfast.nextがNoneになるし、循環があれば必ずfastがslowに追いつくから陥らない。
-            if slow == fast:
-                return True
-
             slow = slow.next
             fast = fast.next.next
+            # slowとfastを同じ場所で始めるなら、進めてから判定しないと常にTrueになってしまう
+            if slow == fast:
+                return True
 
         return False
 
