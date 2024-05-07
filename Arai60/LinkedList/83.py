@@ -12,7 +12,8 @@ class Solution:
             # duplicateを処理していたらリストの最後に到達するかもしれないのでその場合も考慮する.
             while next_node and curr_node.val == next_node.val:
                 next_node = next_node.next
-                curr_node.next = next_node
+            curr_node.next = next_node
+            # 毎回この更新をしなくて良いことに気づいた.
             
             # curr_nodeを進めないといけないのを見落とした.
             curr_node = curr_node.next
