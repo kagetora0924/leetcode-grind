@@ -10,17 +10,20 @@ class Solution:
     """
     def detectCycle1(self, head: Optional[ListNode]) -> Optional[ListNode]:
         visited_nodes = set()
-        temp = head
+        curr = head
         # headがNoneだった場合がどうなるか不安になるが、その場合は返すべきNoneを返すので頭で例外処理をしなくてもいい。が、それを明記した方がわかりやすいようにも思った
-        while head:
-            # 循環がなければheadがいつかNoneになり、あれば必ずhead in visited_nodesとなるので無限ループにならないことを確認する
-            # headを進めていくのは連結リストの頭の情報を失うかもしれないと考えたが、pythonでは参照の値渡しをしているのでその不安がないことを後で確認した
+        while curr:
+            # 循環がなければcurrがいつかNoneになり、あれば必ずcurr in visited_nodesとなるので無限ループにならないことを確認する
+            # currを進めていくのは連結リストの頭の情報を失うかもしれないと考えたが、pythonでは参照の値渡しをしているのでその不安がないことを後で確認した
+            # →headでなくcurrを進める
             # https://note.com/crefil/n/n7a0d2dec929b
-            if head in visited_nodes:
-                break
-            visited_nodes.add(head)
-            head = head.next
-        return head
+            if curr in visited_nodes:
+                # 循環が見つかった場合は明示的にここで返す
+                return curr
+            visited_nodes.add(curr)
+            curr = curr.next
+        # 循環が見つかっていないので明示的にNoneを返す
+        return None
 
     """
     https://ja.wikipedia.org/wiki/%E3%83%95%E3%83%AD%E3%82%A4%E3%83%89%E3%81%AE%E5%BE%AA%E7%92%B0%E6%A4%9C%E5%87%BA%E6%B3%95
@@ -29,22 +32,22 @@ class Solution:
     疑似乱数列生成の例が挙げられていて、擬似乱数のページも読んだ。疑似乱数は生成法と内部状態が既知であれば確定的な計算で与えられ、予測ができるようになっている。
     """
     def detectCycle2(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        if not head:
-            return None
-        # slow、fastが出会った後にslowとheadが出会うように進めるということで二つwhileループを使うので、headがNoneの場合は最初に省いておくのがわかりやすいし確実と考えた
+        # headがNoneを別で扱わなくて良いような処理にする
         slow = head
         fast = head
-        while slow and fast and fast.next:
+        while fast and fast.next:
+            assert(slow)
             slow = slow.next
             fast = fast.next.next
             if slow == fast:
                 break
-        # slowとfastが出会うまでは循環検出するだけの前問と同じ. ループの中で、循環を検出したかどうか検出すると書き方がややこしくなりそうだから、ループの後で行うことにする
-        if not fast or not fast.next:
+        # ループが正常終了した場合は循環が見つかっていないのでelseでreturn処理をする。見つかった場合はbreakしているので次に進む
+        else:
             return None
 
-        while slow != head:
-            head = head.next
+        curr = head
+        while slow != curr:
+            curr = curr.next
             slow = slow.next
 
-        return head
+        return curr
